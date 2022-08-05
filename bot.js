@@ -26,7 +26,7 @@ const db = client.db("Yuksalish");
 
 const bot = new Telegraf("5593163136:AAFfYEFGJwobMOlL2MZHOnb2_nsjUAh9O2M");
 
-const web_link = "https://profound-rabanadas-895346.netlify.app";
+const web_link = "https://zippy-fairy-cf8470.netlify.app";
 bot.start(async ctx => {
   const user_id = ctx.message.from.id;
   const chat_id = ctx.message.chat.id;
