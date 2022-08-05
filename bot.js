@@ -92,6 +92,6 @@ app.post("/create-anketa", (req, res) => {
 });
 
 
-app.listen("5002", () => {
+app.listen(process.env.PORT || 5002, () => {
   console.log("lisening ");
 });
