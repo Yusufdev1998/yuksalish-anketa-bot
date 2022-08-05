@@ -91,6 +91,10 @@ app.post("/create-anketa", (req, res) => {
   } catch (error) {}
 });
 
+
+app.get("/", (req, res) => {
+  res.send("bot is running");
+});
 app.listen("5002", () => {
   console.log("lisening ");
 });
