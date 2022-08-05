@@ -1,0 +1,16 @@
+module.exports =  [
+    {id:"1",nomi:"Farg`ona viloyati"},
+    {id:"2",nomi:"Andijon viloyati"},
+    {id:"3",nomi:"Buxoro viloyati"},
+    {id:"4",nomi:"Jizzax viloyati"},
+    {id:"5",nomi:"Qashqadaryo viloyati"},
+    {id:"6",nomi:"Navoiy viloyati"},
+    {id:"7",nomi:"Namangan viloyati"},
+    {id:"8",nomi:"Samarqand viloyati"},
+    {id:"9",nomi:"Surxondaryo viloyati"},
+    {id:"10",nomi:"Sirdaryo viloyati"},
+    {id:"11",nomi:"Toshkent viloyati"},
+    {id:"12",nomi:"Qoraqalpog`iston Respublikasi"},
+    {id:"13",nomi:"Xorazm viloyati"},
+    {id:"14",nomi:"Toshkent shahri"},
+]
