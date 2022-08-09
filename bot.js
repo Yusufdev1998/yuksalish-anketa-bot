@@ -52,7 +52,6 @@ bot.start(async ctx => {
 bot.launch();
 
 app.post("/create-anketa", (req, res) => {
-  console.log("hi");
   try {
     db.collection("anketas_of_users").insertOne(req.body);
 
@@ -81,16 +80,11 @@ app.post("/create-anketa", (req, res) => {
           }\n💰: ${obj.salary}`,
         }
       );
-
-        // setTimeout(() => {
-        //   fs.unlinkSync(path)
-        // }, 1000);
     });
 
     res.send("done");
   } catch (error) {}
 });
-
 
 app.listen(process.env.PORT || 5002, () => {
   console.log("lisening ");
