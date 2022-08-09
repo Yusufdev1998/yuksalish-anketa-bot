@@ -69,7 +69,6 @@ app.post("/create-anketa", async (req, res) => {
 });
 
 bot.launch();
-
 app.listen(process.env.PORT || 5002, () => {
   console.log("lisening ");
 });
