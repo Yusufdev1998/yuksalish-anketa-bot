@@ -65,7 +65,9 @@ app.post("/create-anketa", async (req, res) => {
     }
 
     res.send("done");
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 bot.launch();
