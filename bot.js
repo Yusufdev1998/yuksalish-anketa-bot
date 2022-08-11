@@ -12,7 +12,7 @@ const app = express();
 config();
 app.use(cors());
 
-app.use(express.json({ limit: "30mb" }));
+app.use(express.json({ limit: "50mb" }));
 
 const uri = process.env.MONGOURI;
 
