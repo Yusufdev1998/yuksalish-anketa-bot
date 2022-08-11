@@ -36,7 +36,6 @@ bot.start(async ctx => {
       },
     });
   } catch (error) {
-    console.log(error);
   }
 });
 
