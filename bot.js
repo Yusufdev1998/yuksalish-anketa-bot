@@ -47,7 +47,7 @@ bot.start(async ctx => {
     ctx.reply(startText, {
       reply_markup: {
         inline_keyboard: [
-          [{ text: "Anketa to'ldirish", web_app: { url: web_link } }],
+          [{ text: "Анкета тўлдириш", web_app: { url: web_link } }],
         ],
       },
     });
