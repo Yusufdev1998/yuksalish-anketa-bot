@@ -23,9 +23,9 @@ const bot = new Telegraf(process.env.TOKEN);
 
 const web_link = process.env.WEBAPP;
 
-const startText = `Salom 👋🏻 
-Ushbu bot Yuksalishda labor️ anketalarni to‘ldirish va mehnat uchun mo‘ljallangan!
-Bu yerda siz o‘zingizning arizangizni 📄 to‘ldirishingiz ✍️ va bizning kompaniyamizdagi mavjud bo‘sh ish o‘rinlari haqida bilib olishingiz mumkin!`;
+const startText = `Доброго времени суток, Уважаемый кандидат… Благодарим за проявленный интерес к нашей компании… Просим Вас ответить на наши стандартные вопросы, тем самым оставив заявку в нашей базе данных… 
+
+Assalomu alaykum, Xurmatli nomzod... Kompaniyamizga bo'lgan qiziqishingiz uchun tashakkur... Sizdan standart savollarimizga javob berishingizni so'raymiz va shu bilan o'zingiz haqingizdagi ma'lumotlarni bazamizda qoldirasiz …`;
 bot.start(async ctx => {
   try {
     ctx.reply(startText, {
