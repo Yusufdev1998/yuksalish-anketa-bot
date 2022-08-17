@@ -25,17 +25,17 @@ const web_link = process.env.WEBAPP;
 
 const SubmitedAnketText = (surname, name, middleName) => {
   return `Хурматли ${surname} ${name} ${middleName}! Вақтингиз учун раҳмат, анкета кўриб чиқиш учун қабул қилинди... 3 кун ичида сиз билан боғланамиз...
-  Ўзингизга ва яқинларингизга ғамхўрлик қилинг...
+Ўзингизга ва яқинларингизга ғамхўрлик қилинг...
   
-  Ҳурмат билан,
-  @yuksalish_anketabot
+Ҳурмат билан,
+@yuksalish_anketabot
   _______________________________________________________________
   
-  Уважаемый ${surname} ${name} ${middleName}! Благодарим Вас за уделённое время, анкета принята на рассмотрение... Свяжемся с Вами в течении 3-х дней...
-  Берегите себя и своих близких...
+Уважаем(ый/ая) ${surname} ${name} ${middleName}! Благодарим Вас за уделённое время, анкета принята на рассмотрение... Свяжемся с Вами в течении 3-х дней...
+Берегите себя и своих близких...
   
-  С Уважением,
-  @yuksalish_anketabot`;
+С Уважением,
+@yuksalish_anketabot`;
 };
 
 const startText = `Ассалому алайкум, Хурматли номзод... Компаниямизга бўлган қизиқишингиз учун ташаккур... Сиздан стандарт саволларимизга жавоб беришингизни сўраймиз ва шу билан ўзингиз ҳақингиздаги маълумотларни базамизда қолдирасиз…
@@ -55,13 +55,20 @@ bot.start(async ctx => {
 });
 
 app.post("/create-anketa", async (req, res) => {
-  const HR = 1430918021;
+  const HR = 5727877786;
   try {
     await db
       .collection("anketas_of_users")
       .insertOne({ ...req.body, createdAt: new Date() });
 
     const send = async (obj, path) => {
+      bot.telegram.sendPhoto(
+        obj.user_id,
+        { source: path || "avatar.png" },
+        {
+          caption: await Caption(obj, db),
+        }
+      );
       bot.telegram.sendMessage(
         obj.user_id,
         SubmitedAnketText(obj.surname, obj.name, obj.middleName)
