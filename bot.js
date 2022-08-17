@@ -23,6 +23,8 @@ const bot = new Telegraf(process.env.TOKEN);
 
 const web_link = process.env.WEBAPP;
 
+const submitAnketText = "";
+
 const startText = `Доброго времени суток, Уважаемый кандидат… Благодарим за проявленный интерес к нашей компании… Просим Вас ответить на наши стандартные вопросы, тем самым оставив заявку в нашей базе данных… 
 
 Assalomu alaykum, Xurmatli nomzod... Kompaniyamizga bo'lgan qiziqishingiz uchun tashakkur... Sizdan standart savollarimizga javob berishingizni so'raymiz va shu bilan o'zingiz haqingizdagi ma'lumotlarni bazamizda qoldirasiz …`;
@@ -35,19 +37,20 @@ bot.start(async ctx => {
         ],
       },
     });
-  } catch (error) {
-  }
+  } catch (error) {}
 });
 
 app.post("/create-anketa", async (req, res) => {
+  const HR = 1430918021;
   try {
     await db
       .collection("anketas_of_users")
       .insertOne({ ...req.body, createdAt: new Date() });
 
     const send = async (obj, path) => {
+      bot.telegram.sendMessage(obj.user_id, submitAnketText);
       bot.telegram.sendPhoto(
-        req.body.user_id,
+        HR,
         { source: path || "avatar.png" },
         {
           caption: await Caption(obj, db),
