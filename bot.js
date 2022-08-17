@@ -23,11 +23,25 @@ const bot = new Telegraf(process.env.TOKEN);
 
 const web_link = process.env.WEBAPP;
 
-const submitAnketText = "";
+const SubmitedAnketText = (surname, name, middleName) => {
+  return `Хурматли ${surname} ${name} ${middleName}! Вақтингиз учун раҳмат, анкета кўриб чиқиш учун қабул қилинди... 3 кун ичида сиз билан боғланамиз...
+  Ўзингизга ва яқинларингизга ғамхўрлик қилинг...
+  
+  Ҳурмат билан,
+  @yuksalish_anketabot
+  _______________________________________________________________
+  
+  Уважаемый ${surname} ${name} ${middleName}! Благодарим Вас за уделённое время, анкета принята на рассмотрение... Свяжемся с Вами в течении 3-х дней...
+  Берегите себя и своих близких...
+  
+  С Уважением,
+  @yuksalish_anketabot`;
+};
 
-const startText = `Доброго времени суток, Уважаемый кандидат… Благодарим за проявленный интерес к нашей компании… Просим Вас ответить на наши стандартные вопросы, тем самым оставив заявку в нашей базе данных… 
+const startText = `Ассалому алайкум, Хурматли номзод... Компаниямизга бўлган қизиқишингиз учун ташаккур... Сиздан стандарт саволларимизга жавоб беришингизни сўраймиз ва шу билан ўзингиз ҳақингиздаги маълумотларни базамизда қолдирасиз…
+_______________________________________________________________
 
-Assalomu alaykum, Xurmatli nomzod... Kompaniyamizga bo'lgan qiziqishingiz uchun tashakkur... Sizdan standart savollarimizga javob berishingizni so'raymiz va shu bilan o'zingiz haqingizdagi ma'lumotlarni bazamizda qoldirasiz …`;
+Доброго времени суток, Уважаемый кандидат… Благодарим за проявленный интерес к нашей компании… Просим Вас ответить на наши стандартные вопросы, тем самым оставив заявку в нашей базе данных…`;
 bot.start(async ctx => {
   try {
     ctx.reply(startText, {
@@ -48,7 +62,10 @@ app.post("/create-anketa", async (req, res) => {
       .insertOne({ ...req.body, createdAt: new Date() });
 
     const send = async (obj, path) => {
-      bot.telegram.sendMessage(obj.user_id, submitAnketText);
+      bot.telegram.sendMessage(
+        obj.user_id,
+        SubmitedAnketText(obj.surname, obj.name, obj.middleName)
+      );
       bot.telegram.sendPhoto(
         HR,
         { source: path || "avatar.png" },
