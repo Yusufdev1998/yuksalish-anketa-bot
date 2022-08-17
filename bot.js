@@ -31,7 +31,7 @@ const SubmitedAnketText = (surname, name, middleName) => {
 @yuksalish_anketabot
   _______________________________________________________________
   
-Уважаем(ый/ая) ${surname} ${name} ${middleName}! Благодарим Вас за уделённое время, анкета принята на рассмотрение... Свяжемся с Вами в течении 3-х дней...
+Уважаем(ая)ый ${surname} ${name} ${middleName}! Благодарим Вас за уделённое время, анкета принята на рассмотрение... Свяжемся с Вами в течении 3-х дней...
 Берегите себя и своих близких...
   
 С Уважением,
@@ -69,10 +69,13 @@ app.post("/create-anketa", async (req, res) => {
           caption: await Caption(obj, db),
         }
       );
-      bot.telegram.sendMessage(
-        obj.user_id,
-        SubmitedAnketText(obj.surname, obj.name, obj.middleName)
-      );
+      setTimeout(() => {
+        bot.telegram.sendMessage(
+          obj.user_id,
+          SubmitedAnketText(obj.surname, obj.name, obj.middleName)
+        );
+      }, 300);
+
       bot.telegram.sendPhoto(
         HR,
         { source: path || "avatar.png" },
