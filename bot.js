@@ -74,7 +74,7 @@ app.post("/create-anketa", async (req, res) => {
           obj.user_id,
           SubmitedAnketText(obj.surname, obj.name, obj.middleName)
         );
-      }, 300);
+      }, 1000);
 
       bot.telegram.sendPhoto(
         HR,
