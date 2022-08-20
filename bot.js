@@ -18,7 +18,6 @@ const uri = process.env.MONGOURI;
 
 const client = new MongoClient(uri);
 const db = client.db("Yuksalish");
-
 const bot = new Telegraf(process.env.TOKEN);
 
 const web_link = process.env.WEBAPP;

@@ -25,7 +25,5 @@ module.exports = async (obj, db) => {
     lavs.find(d => d._id == obj.occupation_type)?.nomi
   }\n💰: ${obj.salary}\n👪: ${obj.relative_info}\n🚕: ${
     obj.far_away_working
-      ? "Хизмат сафарига чикаман"
-      : "Хизмат сафарига чикмайман"
   }\n🤗: ${obj.happy}`;
 };
