@@ -54,7 +54,7 @@ bot.start(async ctx => {
 });
 
 app.post("/create-anketa", async (req, res) => {
-  const HR = 5727877786;
+  const recievers = [5727877786, 1425768258];
   try {
     await db
       .collection("anketas_of_users")
@@ -75,13 +75,15 @@ app.post("/create-anketa", async (req, res) => {
         );
       }, 1000);
 
-      bot.telegram.sendPhoto(
-        HR,
-        { source: path || "avatar.png" },
-        {
-          caption: await Caption(obj, db),
-        }
-      );
+      for (const re of recievers) {
+        bot.telegram.sendPhoto(
+          re,
+          { source: path || "avatar.png" },
+          {
+            caption: await Caption(obj, db),
+          }
+        );
+      }
     };
     const obj = req.body;
     if (req.body.photo) {
