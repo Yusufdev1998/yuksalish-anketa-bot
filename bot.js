@@ -1,5 +1,5 @@
 const { Telegraf } = require("telegraf");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectId } = require("mongodb");
 
 const cors = require("cors");
 const express = require("express");
@@ -7,6 +7,7 @@ const express = require("express");
 const { config } = require("dotenv");
 const Base64ToFile = require("./utils/Base64ToFile.js");
 const Caption = require("./utils/Caption.js");
+const Keyboards = require("./utils/Keyboards.js");
 
 const app = express();
 config();
@@ -52,9 +53,78 @@ bot.start(async ctx => {
     });
   } catch (error) {}
 });
+const recievers = [5727877786, 1425768258];
+
+bot.context.state = {
+  message: 0,
+};
+
+bot.command("message", async ctx => {
+  if (!recievers.includes(ctx.message.from.id)) {
+    ctx.reply("Siz admin emassiz!!!");
+    return;
+  }
+  try {
+    ctx.state.message = 1;
+    const fils = await db.collection("filials").find().toArray();
+    const mapedFils = fils.map(f => ({ text: f.nomi }));
+    const keys = Keyboards(mapedFils);
+    ctx.reply("Filial tanlang!", {
+      reply_markup: {
+        keyboard: keys,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+bot.on("message", async ctx => {
+  if (ctx.state.message === 1) {
+    const work_district_id = await db
+      .collection("filials")
+      .findOne({ nomi: ctx.message.text }, { _id: 1 });
+    ctx.state.message = 2;
+    ctx.state.filial_id = work_district_id.nomi;
+    ctx.reply("SMS so'zini jo'nating");
+    return;
+  }
+
+  if (ctx.state.message === 2 && ctx.state.filial_id) {
+    try {
+      ctx.reply("SMS habar jo'natilmoqda...");
+      const users = await db
+        .collection("anketas_of_users")
+        .aggregate([
+          {
+            $match: {
+              work_district_id_nomi: ctx.state.filial_id,
+            },
+          },
+          {
+            $project: {
+              user_id: 1,
+            },
+          },
+        ])
+        .toArray();
+
+      for (const user of users) {
+        bot.telegram.sendMessage(user.user_id, ctx.message.text);
+      }
+
+      ctx.reply("Barchaga sms xabar jo'natilindi");
+
+      ctx.state.message = 0;
+      ctx.state.filial_id = null;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
 
 app.post("/create-anketa", async (req, res) => {
-  const recievers = [5727877786, 1425768258];
+
   try {
     await db
       .collection("anketas_of_users")
