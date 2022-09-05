@@ -8,6 +8,7 @@ const { config } = require("dotenv");
 const Base64ToFile = require("./utils/Base64ToFile.js");
 const Caption = require("./utils/Caption.js");
 const Keyboards = require("./utils/Keyboards.js");
+const SMSText = require("./utils/SMSText.js");
 
 const app = express();
 config();
@@ -59,11 +60,15 @@ bot.context.state = {
   message: 0,
 };
 
+bot.command("text", ctx => {
+  ctx.reply(SMSText);
+});
+
 bot.command("message", async ctx => {
-  if (!recievers.includes(ctx.message.from.id)) {
-    ctx.reply("Siz admin emassiz!!!");
-    return;
-  }
+  // if (!recievers.includes(ctx.message.from.id)) {
+  //   ctx.reply("Siz admin emassiz!!!");
+  //   return;
+  // }
   try {
     ctx.state.message = 1;
     const fils = await db.collection("filials").find().toArray();
@@ -92,6 +97,7 @@ bot.on("message", async ctx => {
 
   if (ctx.state.message === 2 && ctx.state.filial_id) {
     try {
+      let i = 0;
       ctx.reply("SMS habar jo'natilmoqda...");
       const users = await db
         .collection("anketas_of_users")
@@ -99,6 +105,7 @@ bot.on("message", async ctx => {
           {
             $match: {
               work_district_id_nomi: ctx.state.filial_id,
+              status: { $ne: false },
             },
           },
           {
@@ -110,10 +117,15 @@ bot.on("message", async ctx => {
         .toArray();
 
       for (const user of users) {
+        i += 1;
+
         bot.telegram.sendMessage(user.user_id, ctx.message.text);
+        console.log(i);
       }
 
-      ctx.reply("Barchaga sms xabar jo'natilindi");
+      ctx.reply(
+        "Barchaga sms xabar jo'natilindi(" + i + "ta shaxsga yetkazildi"
+      );
 
       ctx.state.message = 0;
       ctx.state.filial_id = null;
@@ -124,7 +136,6 @@ bot.on("message", async ctx => {
 });
 
 app.post("/create-anketa", async (req, res) => {
-
   try {
     await db
       .collection("anketas_of_users")
