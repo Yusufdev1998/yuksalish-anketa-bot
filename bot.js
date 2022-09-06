@@ -65,10 +65,10 @@ bot.command("text", ctx => {
 });
 
 bot.command("message", async ctx => {
-  // if (!recievers.includes(ctx.message.from.id)) {
-  //   ctx.reply("Siz admin emassiz!!!");
-  //   return;
-  // }
+  if (!recievers.includes(ctx.message.from.id)) {
+    ctx.reply("Siz admin emassiz!!!");
+    return;
+  }
   try {
     ctx.state.message = 1;
     const fils = await db.collection("filials").find().toArray();
@@ -120,7 +120,6 @@ bot.on("message", async ctx => {
         i += 1;
 
         bot.telegram.sendMessage(user.user_id, ctx.message.text);
-        console.log(i);
       }
 
       ctx.reply(
