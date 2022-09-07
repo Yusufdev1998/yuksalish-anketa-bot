@@ -54,7 +54,7 @@ bot.start(async ctx => {
     });
   } catch (error) {}
 });
-const recievers = [5727877786, 1425768258];
+const recievers = [451397829, 5727877786, 1425768258];
 
 bot.context.state = {
   message: 0,
