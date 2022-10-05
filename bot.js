@@ -189,7 +189,8 @@ app.post("/send-message", async (req, res)=> {
           await db.collection("history_of_anketas").create({user_id: body.user_id, message: body.message})
           res.status(200).send("done")
         } catch (error) {
-          res.status(400).send(error)
+          console.log(error);
+          res.status(400).json({error})
         }
      }
 })
