@@ -187,9 +187,9 @@ app.post("/send-message", async (req, res)=> {
         try { 
           bot.telegram.sendMessage(body.user_id, body.message);
           await db.collection("history_of_anketas").create({user_id: body.user_id, message: body.message})
-          res.send("done")
+          res.status(200).send("done")
         } catch (error) {
-          res.send(error)
+          res.status(400).send(error)
         }
      }
 })
