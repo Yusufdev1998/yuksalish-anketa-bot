@@ -43,7 +43,7 @@ const startText = `Ассалому алайкум, Хурматли номзо�
 _______________________________________________________________
 
 Доброго времени суток, Уважаемый кандидат… Благодарим за проявленный интерес к нашей компании… Просим Вас ответить на наши стандартные вопросы, тем самым оставив заявку в нашей базе данных…`;
-bot.start(async ctx => {
+bot.start(async (ctx) => {
   try {
     ctx.reply(startText, {
       reply_markup: {
@@ -60,11 +60,11 @@ bot.context.state = {
   message: 0,
 };
 
-bot.command("text", ctx => {
+bot.command("text", (ctx) => {
   ctx.reply(SMSText);
 });
 
-bot.command("message", async ctx => {
+bot.command("message", async (ctx) => {
   if (!recievers.includes(ctx.message.from.id)) {
     ctx.reply("Siz admin emassiz!!!");
     return;
@@ -72,7 +72,7 @@ bot.command("message", async ctx => {
   try {
     ctx.state.message = 1;
     const fils = await db.collection("filials").find().toArray();
-    const mapedFils = fils.map(f => ({ text: f.nomi }));
+    const mapedFils = fils.map((f) => ({ text: f.nomi }));
     const keys = Keyboards(mapedFils);
     ctx.reply("Filial tanlang!", {
       reply_markup: {
@@ -84,7 +84,7 @@ bot.command("message", async ctx => {
   }
 });
 
-bot.on("message", async ctx => {
+bot.on("message", async (ctx) => {
   if (ctx.state.message === 1) {
     const work_district_id = await db
       .collection("filials")
@@ -138,7 +138,7 @@ app.post("/create-anketa", async (req, res) => {
   try {
     await db
       .collection("anketas_of_users")
-      .insertOne({ ...req.body, createdAt: new Date() });
+      .insertOne({ ...req.body, status: 0, createdAt: new Date() });
 
     const send = async (obj, path) => {
       bot.telegram.sendPhoto(
@@ -167,7 +167,7 @@ app.post("/create-anketa", async (req, res) => {
     };
     const obj = req.body;
     if (req.body.photo) {
-      Base64ToFile(req.body.photo, path => {
+      Base64ToFile(req.body.photo, (path) => {
         send(obj, path);
       });
     } else {
