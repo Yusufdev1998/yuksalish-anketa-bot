@@ -186,7 +186,7 @@ app.post("/send-message", async (req, res)=> {
      if (body.user_id && body.message) {
         try { 
           bot.telegram.sendMessage(body.user_id, body.message);
-          await db.collection("history_of_anketas").insertOne({user_id: body.user_id, message: body.message})
+          await db.collection("history_of_anketas").insertOne({user_id: body.user_id, message: body.message, createdAt: new Date()})
           res.status(200).send("done")
         } catch (error) {
           console.log(error);
