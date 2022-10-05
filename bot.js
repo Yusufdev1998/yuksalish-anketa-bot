@@ -180,6 +180,20 @@ app.post("/create-anketa", async (req, res) => {
   }
 });
 
+
+app.post("/send-message", async (req, res)=> {
+  const body = req.body
+     if (body.user_id && body.message) {
+        try { 
+          bot.telegram.sendMessage(body.user_id, body.message);
+          await db.collection("history_of_anketas").create({user_id: body.user_id, message: body.message})
+          res.send("done")
+        } catch (error) {
+          res.send(error)
+        }
+     }
+})
+
 bot.launch();
 app.listen(process.env.PORT || 5002, () => {
   console.log("lisening ");
