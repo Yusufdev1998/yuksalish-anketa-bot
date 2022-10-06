@@ -138,7 +138,7 @@ app.post("/create-anketa", async (req, res) => {
   try {
     await db
       .collection("anketas_of_users")
-      .insertOne({ ...req.body, status: 0, createdAt: new Date() });
+      .insertOne({ ...req.body, fio: `${req.body.surname} ${req.body.name} ${req.body.middleName}`, status: 0, createdAt: new Date() });
 
     const send = async (obj, path) => {
       bot.telegram.sendPhoto(
