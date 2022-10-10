@@ -87,16 +87,17 @@ bot.command("message", async (ctx) => {
 // member status
 
 bot.on("my_chat_member", async ctx=> {
-  const member = ctx.myChatMember.new_chat_member
+  const status = ctx.myChatMember.new_chat_member.status
+  const user_id = ctx.myChatMember.chat.id
   let member_status
 
-  if (member.status === "member") {
+  if (status === "member") {
     member_status = 1
   }else {
     member_status = 0
   }
   console.log("user_id:" + member.user.id);
-  const res =  await db.collection("anketas_of_users").updateMany({user_id: member.user.id}, {$set:{member_status: member_status}})
+  const res =  await db.collection("anketas_of_users").updateMany({user_id: user_id}, {$set:{member_status: member_status}})
   console.log(res);
   
 })
