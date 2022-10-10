@@ -195,6 +195,29 @@ app.post("/send-message", async (req, res)=> {
      }
 })
 
+app.post("/send-group-message",async (req, res)=> {
+    const body = req.body
+    if (body.text && body.users) {
+       const sendedUsers = []
+       const userIDs = body.users
+       for (const userID of userIDs) {
+          try {
+            bot.telegram.sendMessage(userID, body.text);
+            await db.collection("history_of_anketas").insertOne({user_id: userID, message: body.text, createdAt: new Date()})
+            sendedUsers.push(userID)
+          } catch (error) {
+            console.log(error);
+          }
+       }
+
+       const left = userIDs.filter(x => !sendedUsers.includes(x))
+
+       res.status(200).json(left)
+    }else {
+      res.status(400).send("provide fields")
+    }
+})
+
 bot.launch();
 app.listen(process.env.PORT || 5002, () => {
   console.log("lisening ");
