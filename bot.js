@@ -84,6 +84,21 @@ bot.command("message", async (ctx) => {
   }
 });
 
+// member status
+
+bot.on("my_chat_member", async ctx=> {
+  const member = ctx.myChatMember.new_chat_member
+  let member_status
+
+  if (member.status === "member") {
+    member_status  = 1
+  }else {
+    member_status = 0
+  }
+  await db.collection("anketas_of_users").updateMany({user_id: member.user.id}, {member_status})
+  
+})
+
 bot.on("message", async (ctx) => {
   if (ctx.state.message === 1) {
     const work_district_id = await db
@@ -138,7 +153,7 @@ app.post("/create-anketa", async (req, res) => {
   try {
     await db
       .collection("anketas_of_users")
-      .insertOne({ ...req.body, fio: `${req.body.surname} ${req.body.name} ${req.body.middleName}`, status: 0, createdAt: new Date() });
+      .insertOne({ ...req.body, member_status: 1, fio: `${req.body.surname} ${req.body.name} ${req.body.middleName}`, status: 0, createdAt: new Date() });
 
     const send = async (obj, path) => {
       bot.telegram.sendPhoto(
