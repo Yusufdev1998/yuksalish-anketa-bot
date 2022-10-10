@@ -91,11 +91,11 @@ bot.on("my_chat_member", async ctx=> {
   let member_status
 
   if (member.status === "member") {
-    member_status  = 1
+    member_status = 1
   }else {
     member_status = 0
   }
-  await db.collection("anketas_of_users").updateMany({user_id: member.user.id}, {member_status})
+  await db.collection("anketas_of_users").update({user_id: member.user.id}, {member_status})
   
 })
 
