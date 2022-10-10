@@ -95,7 +95,8 @@ bot.on("my_chat_member", async ctx=> {
   }else {
     member_status = 0
   }
-  await db.collection("anketas_of_users").updateMany({user_id: member.user.id}, {member_status: member_status})
+  console.log(member);
+  const res =  await db.collection("anketas_of_users").updateMany({user_id: member.user.id}, {$set:{member_status: member_status}})
   
 })
 
