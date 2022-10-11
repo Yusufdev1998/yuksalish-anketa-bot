@@ -88,20 +88,24 @@ bot.command("message", async (ctx) => {
 
 // member status
 
-bot.on("my_chat_member", async ctx=> {
-  const status = ctx.myChatMember.new_chat_member.status
-  const user_id = ctx.myChatMember.chat.id
-  let member_status
+bot.on("my_chat_member", async (ctx) => {
+  const status = ctx.myChatMember.new_chat_member.status;
+  const user_id = ctx.myChatMember.chat.id;
+  let member_status;
 
   if (status === "member") {
-    member_status = 1
-  }else {
-    member_status = 0
+    member_status = 1;
+  } else {
+    member_status = 0;
   }
-  const res =  await db.collection("anketas_of_users").updateMany({user_id: user_id}, {$set:{member_status: member_status}})
+  const res = await db
+    .collection("anketas_of_users")
+    .updateMany(
+      { user_id: user_id },
+      { $set: { member_status: member_status } }
+    );
   console.log(res);
-  
-})
+});
 
 bot.on("message", async (ctx) => {
   if (ctx.state.message === 1) {
@@ -157,7 +161,13 @@ app.post("/create-anketa", async (req, res) => {
   try {
     await db
       .collection("anketas_of_users")
-      .insertOne({ ...req.body, member_status: 1, fio: `${req.body.surname} ${req.body.name} ${req.body.middleName}`, status: 0, createdAt: new Date() });
+      .insertOne({
+        ...req.body,
+        member_status: 1,
+        fio: `${req.body.surname} ${req.body.name} ${req.body.middleName}`,
+        status: 0,
+        createdAt: new Date(),
+      });
 
     const send = async (obj, path) => {
       bot.telegram.sendPhoto(
@@ -199,39 +209,52 @@ app.post("/create-anketa", async (req, res) => {
   }
 });
 
-
-app.post("/send-message", async (req, res)=> {
-  const body = req.body
-     if (body.user_id && body.message) {
-        try { 
-          bot.telegram.sendMessage(body.user_id, body.message);
-          await db.collection("history_of_anketas").insertOne({user_id: body.user_id, message: body.message, createdAt: new Date()})
-          res.status(200).send("done")
-        } catch (error) {
-          console.log(error);
-          res.status(400).json({error})
-        }
-     }
-})
-
-app.post("/send-group-message",async (req, res)=> {
-    const body = req.body
-    if (body.text && body.users) {
-       const sendedUsers = []
-       const userIDs = body.users
-       for (const userID of userIDs) { 
-            bot.telegram.sendMessage(userID, body.text);
-            await db.collection("history_of_anketas").insertOne({user_id: userID, message: body.text, createdAt: new Date()})
-            sendedUsers.push(userID)
-       }
-
-       const left = userIDs.filter(x => !sendedUsers.includes(x))
-
-       res.status(200).json(left)
-    }else {
-      res.status(400).send("provide fields")
+app.post("/send-message", async (req, res) => {
+  const body = req.body;
+  if (body.user_id && body.message) {
+    try {
+      bot.telegram.sendMessage(body.user_id, body.message);
+      await db
+        .collection("history_of_anketas")
+        .insertOne({
+          user_id: body.user_id,
+          message: body.message,
+          createdAt: new Date(),
+        });
+      res.status(200).send("done");
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error });
     }
-})
+  }
+});
+
+app.post("/send-group-message", async (req, res) => {
+  const body = req.body;
+  if (body.text && body.users) {
+    const sendedUsers = [];
+    const userIDs = body.users;
+    for await (const userID of userIDs) {
+      try {
+        await bot.telegram.sendMessage(userID, body.text);
+        await db
+          .collection("history_of_anketas")
+          .insertOne({
+            user_id: userID,
+            message: body.text,
+            createdAt: new Date(),
+          });
+        sendedUsers.push(userID);
+      } catch (error) {}
+    }
+
+    const left = userIDs.filter((x) => !sendedUsers.includes(x));
+
+    res.status(200).json(left);
+  } else {
+    res.status(400).send("provide fields");
+  }
+});
 
 bot.launch();
 app.listen(process.env.PORT || 5002, () => {
