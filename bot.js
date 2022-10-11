@@ -52,7 +52,9 @@ bot.start(async (ctx) => {
         ],
       },
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 const recievers = [451397829, 5727877786, 1425768258];
 
