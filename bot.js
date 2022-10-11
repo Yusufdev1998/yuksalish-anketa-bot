@@ -219,14 +219,10 @@ app.post("/send-group-message",async (req, res)=> {
     if (body.text && body.users) {
        const sendedUsers = []
        const userIDs = body.users
-       for (const userID of userIDs) {
-          try {
+       for (const userID of userIDs) { 
             bot.telegram.sendMessage(userID, body.text);
             await db.collection("history_of_anketas").insertOne({user_id: userID, message: body.text, createdAt: new Date()})
             sendedUsers.push(userID)
-          } catch (error) {
-            console.log(error);
-          }
        }
 
        const left = userIDs.filter(x => !sendedUsers.includes(x))
