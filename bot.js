@@ -1,5 +1,5 @@
 const { Telegraf } = require("telegraf");
-const { MongoClient, ObjectId } = require("mongodb");
+const { MongoClient } = require("mongodb");
 
 const cors = require("cors");
 const express = require("express");
@@ -104,7 +104,6 @@ bot.on("my_chat_member", async (ctx) => {
       { user_id: user_id },
       { $set: { member_status: member_status } }
     );
-  console.log(res);
 });
 
 bot.on("message", async (ctx) => {
