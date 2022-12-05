@@ -1,7 +1,7 @@
 {
-  "name": "bot 3",
+  "name": "bot",
   "version": "1.3.0",
-  "description": " sdas  asdas ",
+  "description": "sdas  asdas ",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
