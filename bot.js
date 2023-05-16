@@ -20,7 +20,7 @@ const uri = process.env.MONGOURI;
 
 const client = new MongoClient(uri);
 const db = client.db("Yuksalish");
-const bot = new Telegraf(process.env.TOKEN);
+const bot = new Telegraf("5593163136:AAFRRdWYunOX4x8dWciLvOne0cv1l3LQE0E");
 
 const web_link = process.env.WEBAPP;
 
@@ -43,7 +43,7 @@ const startText = `Ассалому алайкум, Хурматли номзо�
 _______________________________________________________________
 
 Доброго времени суток, Уважаемый кандидат… Благодарим за проявленный интерес к нашей компании… Просим Вас ответить на наши стандартные вопросы, тем самым оставив заявку в нашей базе данных…`;
-bot.start(async (ctx) => {
+bot.start(async ctx => {
   try {
     await ctx.reply(startText, {
       reply_markup: {
@@ -62,11 +62,11 @@ bot.context.state = {
   message: 0,
 };
 
-bot.command("text", (ctx) => {
+bot.command("text", ctx => {
   ctx.reply(SMSText);
 });
 
-bot.command("message", async (ctx) => {
+bot.command("message", async ctx => {
   if (!recievers.includes(ctx.message.from.id)) {
     ctx.reply("Siz admin emassiz!!!");
     return;
@@ -74,7 +74,7 @@ bot.command("message", async (ctx) => {
   try {
     ctx.state.message = 1;
     const fils = await db.collection("filials").find().toArray();
-    const mapedFils = fils.map((f) => ({ text: f.nomi }));
+    const mapedFils = fils.map(f => ({ text: f.nomi }));
     const keys = Keyboards(mapedFils);
     ctx.reply("Filial tanlang!", {
       reply_markup: {
@@ -88,7 +88,7 @@ bot.command("message", async (ctx) => {
 
 // member status
 
-bot.on("my_chat_member", async (ctx) => {
+bot.on("my_chat_member", async ctx => {
   const status = ctx.myChatMember.new_chat_member.status;
   const user_id = ctx.myChatMember.chat.id;
   let member_status;
@@ -106,7 +106,7 @@ bot.on("my_chat_member", async (ctx) => {
     );
 });
 
-bot.on("message", async (ctx) => {
+bot.on("message", async ctx => {
   if (ctx.state.message === 1) {
     const work_district_id = await db
       .collection("filials")
@@ -158,15 +158,13 @@ bot.on("message", async (ctx) => {
 
 app.post("/create-anketa", async (req, res) => {
   try {
-    await db
-      .collection("anketas_of_users")
-      .insertOne({
-        ...req.body,
-        member_status: 1,
-        fio: `${req.body.surname} ${req.body.name} ${req.body.middleName}`,
-        status: 0,
-        createdAt: new Date(),
-      });
+    await db.collection("anketas_of_users").insertOne({
+      ...req.body,
+      member_status: 1,
+      fio: `${req.body.surname} ${req.body.name} ${req.body.middleName}`,
+      status: 0,
+      createdAt: new Date(),
+    });
 
     const send = async (obj, path) => {
       bot.telegram.sendPhoto(
@@ -195,7 +193,7 @@ app.post("/create-anketa", async (req, res) => {
     };
     const obj = req.body;
     if (req.body.photo) {
-      Base64ToFile(req.body.photo, (path) => {
+      Base64ToFile(req.body.photo, path => {
         send(obj, path);
       });
     } else {
@@ -213,13 +211,11 @@ app.post("/send-message", async (req, res) => {
   if (body.user_id && body.message) {
     try {
       bot.telegram.sendMessage(body.user_id, body.message);
-      await db
-        .collection("history_of_anketas")
-        .insertOne({
-          user_id: body.user_id,
-          message: body.message,
-          createdAt: new Date(),
-        });
+      await db.collection("history_of_anketas").insertOne({
+        user_id: body.user_id,
+        message: body.message,
+        createdAt: new Date(),
+      });
       res.status(200).send("done");
     } catch (error) {
       console.log(error);
@@ -236,18 +232,16 @@ app.post("/send-group-message", async (req, res) => {
     for await (const userID of userIDs) {
       try {
         await bot.telegram.sendMessage(userID, body.text);
-        await db
-          .collection("history_of_anketas")
-          .insertOne({
-            user_id: userID,
-            message: body.text,
-            createdAt: new Date(),
-          });
+        await db.collection("history_of_anketas").insertOne({
+          user_id: userID,
+          message: body.text,
+          createdAt: new Date(),
+        });
         sendedUsers.push(userID);
       } catch (error) {}
     }
 
-    const left = userIDs.filter((x) => !sendedUsers.includes(x));
+    const left = userIDs.filter(x => !sendedUsers.includes(x));
 
     res.status(200).json(left);
   } else {
