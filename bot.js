@@ -16,13 +16,14 @@ app.use(cors());
 
 app.use(express.json({ limit: "50mb" }));
 
-const uri = process.env.MONGOURI;
+const uri =
+  "mongodb+srv://codapp:nThMt1A3wrqQd8EV@cluster0.izhwl.mongodb.net/Yuksalish?retryWrites=true&w=majority";
 
 const client = new MongoClient(uri);
 const db = client.db("Yuksalish");
 const bot = new Telegraf("5593163136:AAFRRdWYunOX4x8dWciLvOne0cv1l3LQE0E");
 
-const web_link = process.env.WEBAPP;
+const web_link = "https://anketa-bot.netlify.app";
 
 const SubmitedAnketText = (surname, name, middleName) => {
   return `Хурматли ${surname} ${name} ${middleName}! Вақтингиз учун раҳмат, анкета кўриб чиқиш учун қабул қилинди... 3 кун ичида сиз билан боғланамиз...
