@@ -9,7 +9,7 @@ const Base64ToFile = require("./utils/Base64ToFile.js");
 const Caption = require("./utils/Caption.js");
 const Keyboards = require("./utils/Keyboards.js");
 const SMSText = require("./utils/SMSText.js");
-
+const recievers = [451397829, 5727877786, 1425768258, 1006602729];
 const app = express();
 config();
 app.use(cors());
@@ -57,7 +57,6 @@ bot.start(async ctx => {
     console.log(error);
   }
 });
-const recievers = [451397829, 5727877786, 1425768258];
 
 bot.context.state = {
   message: 0,
