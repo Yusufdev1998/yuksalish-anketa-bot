@@ -21,7 +21,7 @@ const uri =
 
 const client = new MongoClient(uri);
 const db = client.db("Yuksalish");
-const bot = new Telegraf("5593163136:AAE_73Jp7z-mpJKzdQvnwWWAYKxO43_pYZg");
+const bot = new Telegraf("6443863860:AAGkZZZAsdYZ5cGFY3gp8D4dJ6blf6ZEPN8");
 
 const web_link = "https://anketa-bot.netlify.app";
 
